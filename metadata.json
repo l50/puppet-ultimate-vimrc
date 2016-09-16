@@ -1,0 +1,14 @@
+{
+  "name": "puppet-ultimate_vimrc",
+  "version": "0.1.0",
+  "author": "l50",
+  "summary": "Install ultimate_vimrc from amix on Kali",
+  "license": "MIT",
+  "source": "https://github.com/l50/puppet-ultimate_vimrc",
+  "project_page": "https://github.com/l50/puppet-ultimate_vimrc",
+  "issues_url": "https://github.com/l50/puppet-ultimate_vimrc",
+  "dependencies": [
+    {"name":"puppetlabs/stdlib"},
+    {"name":"puppetlabs/vcsrepo"}
+  ]
+}
