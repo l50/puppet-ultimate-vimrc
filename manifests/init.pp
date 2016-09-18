@@ -49,22 +49,29 @@ class ultimate_vimrc(
   include stdlib
   include git
 
-  vcsrepo { $install_location:
-    ensure      => present,
-    provider    => git,
-    source      => 'git://github.com/amix/vimrc.git',
-    require     => Class['git'],
+  # Workaround for gruvbox submodule error in amix' repository
+  exec { 'clone_repo':
+    command  => 'git clone git://github.com/amix/vimrc.git .vim_runtime',
+    provider => 'shell',
+    cwd      => '/tmp',
   } ->
 
-  file { "${install_location}/install_${version}_vimrc.sh":
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
+  file { $install_location:
+    ensure  => 'directory',
+    recurse => true,
+    source  => "file:///tmp/.vim_runtime",
   } ->
 
-  exec { 'install ultimate_vimrc':
-    command  => "${install_location}/install_${version}_vimrc.sh",
+  file { 'remove_install_dir':
+    ensure  => absent,
+    path    => '/tmp/.vim_runtime',
+    recurse => true,
+    purge   => true,
+    force   => true,
+  } ->
+
+  exec { 'install_ultimate_vimrc':
+    command  => "/bin/bash ${install_location}/install_${version}_vimrc.sh",
     provider => 'shell',
     cwd      => $install_location,
   }
