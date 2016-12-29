@@ -70,9 +70,18 @@ class ultimate_vimrc(
     force   => true,
   } ->
 
-  exec { 'install_ultimate_vimrc':
+	exec { 'install_ultimate_vimrc':
     command  => "/bin/bash ${install_location}/install_${version}_vimrc.sh",
     provider => 'shell',
     cwd      => $install_location,
+  }
+
+  $additional_modules.each |$name, $url| {
+    vcsrepo { "${module_install_location}/${name}":
+      ensure   => present,
+      provider => git,
+      source   => $url,
+      require  => [Class['git'], File[$install_location]],
+    }
   }
 }
